@@ -63,7 +63,7 @@ mongoose.connect(process.env.DB)
           } catch (e) {
             console.log('Tests are not valid:', e);
           }
-        }, 2000); // 2 secondes pour laisser le temps à la base de s'initialiser
+        }, 500); // 2 secondes pour laisser le temps à la base de s'initialiser
       }
     });
   })
