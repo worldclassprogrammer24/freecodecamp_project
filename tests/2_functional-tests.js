@@ -2,16 +2,26 @@ const chaiHttp = require('chai-http');
 const chai = require('chai');
 const assert = chai.assert;
 const server = require('../server');
+const mongoose = require('mongoose');
 
 chai.use(chaiHttp.default || chaiHttp);
 
 suite('Functional Tests', function() {
-  this.timeout(15000);
+  this.timeout(20000);
+
+  before(function(done) {
+    if (mongoose.connection.readyState === 1) {
+      done();
+    } else {
+      mongoose.connection.once('open', () => done());
+    }
+  });
 
   let testThreadId;
   let testReplyId;
 
   suite('API ROUTING FOR /api/threads/:board', function() {
+    this.timeout(20000);
 
     test('Creating a new thread: POST request to /api/threads/{board}', function(done) {
       chai.request(server)
@@ -61,6 +71,7 @@ suite('Functional Tests', function() {
   });
 
   suite('API ROUTING FOR /api/replies/:board', function() {
+    this.timeout(20000);
 
     test('Creating a new reply: POST request to /api/replies/{board}', function(done) {
       chai.request(server)
