@@ -2,14 +2,22 @@ const chaiHttp = require('chai-http');
 const chai = require('chai');
 const assert = chai.assert;
 const server = require('../server');
+const mongoose = require('mongoose');
 
 chai.use(chaiHttp.default || chaiHttp);
 
 suite('Functional Tests', function() {
-  this.timeout(5000);
+  this.timeout(15000);
 
   let testThreadId;
   let testReplyId;
+
+  // Attente explicite de la connexion MongoDB
+  before(async function() {
+    if (mongoose.connection.readyState !== 1) {
+      await new Promise(resolve => mongoose.connection.once('open', resolve));
+    }
+  });
 
   suite('API ROUTING FOR /api/threads/:board', function() {
     
