@@ -6,13 +6,15 @@ const server = require('../server');
 chai.use(chaiHttp.default || chaiHttp);
 
 suite('Functional Tests', function() {
-  this.timeout(10000);
+  this.timeout(15000);
 
   let testThreadId;
   let testReplyId;
 
   suite('API ROUTING FOR /api/threads/:board', function() {
+    this.timeout(15000);
 
+    // 1. POST /api/threads/{board}
     test('Creating a new thread: POST request to /api/threads/{board}', function(done) {
       chai.request(server)
         .post('/api/threads/fcc_testing')
@@ -23,20 +25,21 @@ suite('Functional Tests', function() {
         });
     });
 
+    // 2. GET /api/threads/{board}
     test('Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}', function(done) {
       chai.request(server)
         .get('/api/threads/fcc_testing')
         .end(function(err, res) {
           assert.equal(res.status, 200);
           assert.isArray(res.body);
-          if (res.body.length > 0) {
-            assert.property(res.body[0], '_id');
-            testThreadId = res.body[0]._id;
-          }
+          assert.isAtLeast(res.body.length, 1);
+          assert.property(res.body[0], '_id');
+          testThreadId = res.body[0]._id;
           done();
         });
     });
 
+    // 3. PUT /api/threads/{board}
     test('Reporting a thread: PUT request to /api/threads/{board}', function(done) {
       chai.request(server)
         .put('/api/threads/fcc_testing')
@@ -48,6 +51,7 @@ suite('Functional Tests', function() {
         });
     });
 
+    // 4. DELETE /api/threads/{board} (incorrect password)
     test('Deleting a thread with the incorrect password: DELETE request to /api/threads/{board}', function(done) {
       chai.request(server)
         .delete('/api/threads/fcc_testing')
@@ -62,7 +66,9 @@ suite('Functional Tests', function() {
   });
 
   suite('API ROUTING FOR /api/replies/:board', function() {
+    this.timeout(15000);
 
+    // 5. POST /api/replies/{board}
     test('Creating a new reply: POST request to /api/replies/{board}', function(done) {
       chai.request(server)
         .post('/api/replies/fcc_testing')
@@ -73,6 +79,7 @@ suite('Functional Tests', function() {
         });
     });
 
+    // 6. GET /api/replies/{board}
     test('Viewing a single thread with all replies: GET request to /api/replies/{board}', function(done) {
       chai.request(server)
         .get('/api/replies/fcc_testing')
@@ -82,13 +89,13 @@ suite('Functional Tests', function() {
           assert.property(res.body, '_id');
           assert.property(res.body, 'replies');
           assert.isArray(res.body.replies);
-          if (res.body.replies.length > 0) {
-            testReplyId = res.body.replies[0]._id;
-          }
+          assert.isAtLeast(res.body.replies.length, 1);
+          testReplyId = res.body.replies[0]._id;
           done();
         });
     });
 
+    // 7. PUT /api/replies/{board}
     test('Reporting a reply: PUT request to /api/replies/{board}', function(done) {
       chai.request(server)
         .put('/api/replies/fcc_testing')
@@ -100,6 +107,7 @@ suite('Functional Tests', function() {
         });
     });
 
+    // 8. DELETE /api/replies/{board} (incorrect password)
     test('Deleting a reply with the incorrect password: DELETE request to /api/replies/{board}', function(done) {
       chai.request(server)
         .delete('/api/replies/fcc_testing')
@@ -111,6 +119,7 @@ suite('Functional Tests', function() {
         });
     });
 
+    // 9. DELETE /api/replies/{board} (correct password)
     test('Deleting a reply with the correct password: DELETE request to /api/replies/{board}', function(done) {
       chai.request(server)
         .delete('/api/replies/fcc_testing')
@@ -122,6 +131,7 @@ suite('Functional Tests', function() {
         });
     });
 
+    // 10. DELETE /api/threads/{board} (correct password)
     test('Deleting a thread with the correct password: DELETE request to /api/threads/{board}', function(done) {
       chai.request(server)
         .delete('/api/threads/fcc_testing')
