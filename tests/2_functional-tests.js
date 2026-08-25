@@ -24,7 +24,7 @@ suite('Functional Tests', function() {
         });
     });
 
-    // 2. Récupération des threads et sauvegarde de l'ID
+    // 2. Lecture des 10 derniers threads
     test('Viewing the 10 most recent threads with 3 replies each: GET request to /api/threads/{board}', function(done) {
       chai.request(server)
         .get('/api/threads/fcc_testing')
@@ -38,19 +38,7 @@ suite('Functional Tests', function() {
         });
     });
 
-    // 3. Tentative de suppression avec mauvais mot de passe
-    test('Deleting a thread with the incorrect password: DELETE request to /api/threads/{board} with an invalid delete_password', function(done) {
-      chai.request(server)
-        .delete('/api/threads/fcc_testing')
-        .send({ thread_id: testThreadId, delete_password: 'wrong_pass' })
-        .end(function(err, res) {
-          assert.equal(res.status, 200);
-          assert.equal(res.text, 'incorrect password');
-          done();
-        });
-    });
-
-    // 4. Signalement du thread
+    // 3. Signalement du thread
     test('Reporting a thread: PUT request to /api/threads/{board}', function(done) {
       chai.request(server)
         .put('/api/threads/fcc_testing')
@@ -58,6 +46,18 @@ suite('Functional Tests', function() {
         .end(function(err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.text, 'reported');
+          done();
+        });
+    });
+
+    // 4. Échec de suppression du thread (mauvais mot de passe)
+    test('Deleting a thread with the incorrect password: DELETE request to /api/threads/{board} with an invalid delete_password', function(done) {
+      chai.request(server)
+        .delete('/api/threads/fcc_testing')
+        .send({ thread_id: testThreadId, delete_password: 'wrong_pass' })
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.text, 'incorrect password');
           done();
         });
     });
@@ -77,7 +77,7 @@ suite('Functional Tests', function() {
         });
     });
 
-    // 6. Affichage du thread et sauvegarde de l'ID de la réponse
+    // 6. Lecture d'un thread avec toutes ses réponses
     test('Viewing a single thread with all replies: GET request to /api/replies/{board}', function(done) {
       chai.request(server)
         .get('/api/replies/fcc_testing')
@@ -129,7 +129,7 @@ suite('Functional Tests', function() {
         });
     });
 
-    // 10. Suppression réussie du thread (bon mot de passe) — EN DERNIER
+    // 10. Suppression réussie du thread (bon mot de passe) - EXÉCUTÉ EN DERNIER
     test('Deleting a thread with the correct password: DELETE request to /api/threads/{board} with a valid delete_password', function(done) {
       chai.request(server)
         .delete('/api/threads/fcc_testing')
