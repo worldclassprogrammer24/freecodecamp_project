@@ -26,16 +26,19 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(cors({ origin: '*' }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const path = require('path');
 
 // Routing des vues
 app.route('/b/:board/').get((req, res) => {
-  res.sendFile(process.cwd() + '/views/board.html');
+  res.sendFile(path.join(__dirname, 'views', 'board.html'));
 });
+
 app.route('/b/:board/:threadid').get((req, res) => {
-  res.sendFile(process.cwd() + '/views/thread.html');
+  res.sendFile(path.join(__dirname, 'views', 'thread.html'));
 });
+
 app.route('/').get((req, res) => {
-  res.sendFile(process.cwd() + '/views/index.html');
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 fccTestingRoutes(app);
