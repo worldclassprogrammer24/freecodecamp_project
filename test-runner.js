@@ -3,7 +3,7 @@ const Mocha = require('mocha');
 const fs = require('fs');
 const path = require('path');
 
-const mocha = new Mocha({ timeout: 15000 });
+const mocha = new Mocha({ timeout: 10000 });
 const testDir = './tests';
 
 try {
@@ -30,6 +30,7 @@ runner.run = function() {
           title: test.title,
           suite: test.suite ? test.suite.title : '',
           state: 'passed',
+          states: 'passed',
           body: test.body
         });
       })
@@ -38,6 +39,7 @@ runner.run = function() {
           title: test.title,
           suite: test.suite ? test.suite.title : '',
           state: 'failed',
+          states: 'failed',
           error: err.message,
           body: test.body
         });

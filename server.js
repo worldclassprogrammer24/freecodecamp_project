@@ -61,13 +61,11 @@ mongoose.connect(process.env.DB)
           try {
             runner.run();
           } catch (e) {
-            console.log('Tests are not valid:');
-            console.error(e);
+            console.log('Tests are not valid:', e);
           }
-        }, 1500);
+        }, 2000); // 2 secondes pour laisser le temps à la base de s'initialiser
       }
     });
   })
-  .catch(err => console.error('Erreur de connexion MongoDB:', err));
-
+  .catch(err => console.error('Erreur MongoDB:', err));
 module.exports = app;
